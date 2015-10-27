@@ -4,8 +4,7 @@ I = imread('../RawImages/Lenna.png');
 figure(1);
 image(I);
 % Convert to YIQ
-yiq = rgb2ntsc(I);
-yData = yiq(:,:,1);
+yData = getYComponent(I);
 % Calculate DCT
 J = dct2(yData);
 % Find most highest points in DCT
@@ -22,7 +21,7 @@ mostPercept = sortrows(mostPercept,-1);
 watermarkLength = 1000;
 watermark = zeros(jHeight,jWidth);
 watermarkX = randn(watermarkLength,1);
-watermarkScale = 0.1;
+watermarkScale = 0.025;
 for i=1:watermarkLength
     loc = mostPercept(i+1,:);
     watermark(loc(2),loc(3)) = watermarkX(i);
@@ -30,13 +29,12 @@ end
 % Apply watermark
 J = J.*exp(watermarkScale*watermark);
 % Reconstruct
-yiq2 = yiq;
-yiq2(:,:,1)=idct2(J);
-% Display diff
-yDiff = yiq2(:,:,1) - yiq(:,:,1);
+watermarkedY = idct2(J);
+watermarkedI = replaceYComponent(I,watermarkedY);
+% Display diff of y
 figure(2);
-imagesc(yDiff);
+imagesc(watermarkedY - yData);
 colorbar;
 % Display modified
 figure(3);
-imagesc(ntsc2rgb(yiq2));
+imagesc(watermarkedI);
