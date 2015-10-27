@@ -9,14 +9,8 @@ yData = getYComponent(I);
 J = dct2(yData);
 % Find most highest points in DCT
 watermarkLength = 1000;
-watermarkVals = [getHighPoints(J,watermarkLength) randn(watermarkLength)];
-% Generate watermark on the most perceptive
-watermark = zeros(jHeight,jWidth);
-for val = watermarkVals'
-    watermark(val(1),val(2)) = val(3);
-end
-% Apply watermark
-J = J.*exp(watermarkScale*watermark);
+watermarkScale=0.05;
+J = genApplyWatermark(J,watermarkLength,watermarkScale);
 % Reconstruct
 watermarkedY = idct2(J);
 watermarkedI = replaceYComponent(I,watermarkedY);
