@@ -8,23 +8,12 @@ yData = getYComponent(I);
 % Calculate DCT
 J = dct2(yData);
 % Find most highest points in DCT
-jWidth = size(J,2);
-jHeight = size(J,1);
-mostPercept = zeros(jWidth*jHeight,3);
-for i = 1:jWidth
-    for j = 1:jHeight
-        mostPercept(i*jHeight+j,:) = [abs(J(i,j)),i,j];
-    end
-end
-mostPercept = sortrows(mostPercept,-1);
-% Generate watermark on the most perceptive
 watermarkLength = 1000;
+watermarkVals = [getHighPoints(J,watermarkLength) randn(watermarkLength)];
+% Generate watermark on the most perceptive
 watermark = zeros(jHeight,jWidth);
-watermarkX = randn(watermarkLength,1);
-watermarkScale = 0.025;
-for i=1:watermarkLength
-    loc = mostPercept(i+1,:);
-    watermark(loc(2),loc(3)) = watermarkX(i);
+for val = watermarkVals'
+    watermark(val(1),val(2)) = val(3);
 end
 % Apply watermark
 J = J.*exp(watermarkScale*watermark);
