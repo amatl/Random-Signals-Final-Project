@@ -8,7 +8,7 @@ watermarkLength = 1000;
 watermarkScale=0.05;
 [watermarkedI, watermark]= genApplyWatermark(I,watermarkLength,watermarkScale);
 % Display diff of y
-testMode = 4;
+testMode = 5;
 if testMode == 1
     watermarkedI = min(max(watermarkedI+0.10*randn(size(I)),0),1);
 elseif testMode == 2
@@ -19,7 +19,7 @@ elseif testMode == 2
 elseif testMode == 3
     for i = 1:size(I,1)
         for j = 1:size(I,2)
-            if i<400 && i>370 && j<400 && j>300
+            if i<400 && i>300 && j<400 && j>300
             else
                 watermarkedI(i,j,:) = double(I(i,j,:))/255;
             end
@@ -28,6 +28,12 @@ elseif testMode == 3
 elseif testMode == 4
     imwrite(watermarkedI,'tmp.jpg','Quality',7);
     watermarkedI = imread('tmp.jpg');
+elseif testMode == 5
+    scalefac = 4.1;
+    watermarkedI = min(max(imresize(watermarkedI,1/scalefac),0),1);
+    size(watermarkedI)
+    watermarkedI = min(max(imresize(watermarkedI,[size(I,1),size(I,2)]),0),1);
+    size(watermarkedI)
 end
 % Display diff of y
 figure(2);
