@@ -2,13 +2,13 @@
 I = imread('../RawImages/Lenna.png');
 % Display original
 figure(1);
-image(I);
-% Find most highest points in DCT
+imagesc(I);
+% Find highest points in DCT
 watermarkLength = 1000;
 watermarkScale=0.05;
 [watermarkedI, watermark]= genApplyWatermark(I,watermarkLength,watermarkScale);
 % Display diff of y
-testMode = 5;
+testMode = 4;
 if testMode == 1
     watermarkedI = min(max(watermarkedI+0.10*randn(size(I)),0),1);
 elseif testMode == 2
@@ -19,14 +19,14 @@ elseif testMode == 2
 elseif testMode == 3
     for i = 1:size(I,1)
         for j = 1:size(I,2)
-            if i<400 && i>300 && j<400 && j>300
+            if i<400 && i>370 && j<400 && j>300
             else
                 watermarkedI(i,j,:) = double(I(i,j,:))/255;
             end
         end
     end
 elseif testMode == 4
-    imwrite(watermarkedI,'tmp.jpg','Quality',7);
+    imwrite(watermarkedI,'tmp.jpg','Quality',4);
     watermarkedI = imread('tmp.jpg');
 elseif testMode == 5
     scalefac = 4.1;
