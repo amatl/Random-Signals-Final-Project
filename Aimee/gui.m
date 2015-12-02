@@ -27,7 +27,7 @@ close all;
           'String',{'Filter','Crop','Compress'},...
           'Position',[150,540,100,25],...
           'Callback',{@popup_menu_i_Callback});
-   hrefresh_i = uicontrol('Parent',tab1,'Style','pushbutton','String','Refresh Image',...
+   hrefresh_i = uicontrol('Parent',tab1,'Style','pushbutton','String','Refresh Watermark',...
           'Position',[50,200,100,25],...
           'Callback',{@refreshbutton_i_Callback});
    haxis_i_original = axes('Parent', tab1, 'Units','pixels','Position',[240,300,300,300]);
@@ -73,7 +73,7 @@ close all;
     %Initailize watermark
     watermarkLength = 1000;
     watermarkScale=0.05;
-    watermarkedI = zeros(size(original_image));
+    watermarkedI = original_image;
     watermark = zeros(watermarkLength,3);
    % Assign the GUI a name to appear in the window title.
    set(f,'Name','Multimedia Watermarking')
@@ -96,12 +96,21 @@ close all;
          val = get(source,'Value');
          % Set current data to the selected data set.
          switch str{val};
-         case 'Filter' %TODO
-            original_image = original_image;
-         case 'Crop' %TODO
-            original_image = original_image;
-         case 'Compress' %TODO
-            original_image = original_image;
+         case 'Filter'
+            watermarkedI = ntsc2rgb(imguidedfilter(watermarkedI));
+            imshow(watermarkedI,'Parent',haxis_i_filter);
+            title('Filtered Watermarked Image','Parent',haxis_i_filter);
+            drawnow
+         case 'Crop'
+           watermarkedI = imcrop(watermarkedI);
+           imshow(watermarkedI,'Parent',haxis_i_filter);
+           title('Cropped Watermarked Image','Parent',haxis_i_filter);
+           drawnow
+         case 'Compress'
+           watermarkedI = imresize(watermarkedI,0.5);
+           imshow(watermarkedI,'Parent',haxis_i_filter);
+           title('Compressed Watermarked Image','Parent',haxis_i_filter);
+           drawnow
          end
       end
   
@@ -109,7 +118,9 @@ close all;
    % the specified plot type.
  
    function loadimagebutton_Callback(source,eventdata) 
-        imshow(original_image);
+       % imshow(original_image);
+       drawnow
+       set(source,'Enable','off');
    end
  
    function applywatermarkbutton_i_Callback(source,eventdata)
@@ -117,6 +128,7 @@ close all;
         imshow(watermarkedI,'Parent',haxis_i_watermark);
         title('Watermarked Image','Parent',haxis_i_watermark);
         drawnow
+        set(source,'Enable','off');
    end
  
    function extractwatermarkbutton_i_Callback(source,eventdata) 
@@ -134,11 +146,16 @@ close all;
             fitnessPlot(i) = checkWatermark(extWatermark,randWatermark);
         end
         plot(fitnessPlot,'Parent',haxis_i_fitness);
+        title('Fitness Plot','Parent',haxis_i_fitness);
         drawnow
    end
 
     function refreshbutton_i_Callback(source,eventdata)
-        imshow(original_image);
+        [watermarkedI, watermark]= genApplyWatermark(original_image,watermarkLength,watermarkScale);
+        imshow(watermarkedI,'Parent',haxis_i_watermark);
+        title('Watermarked Image','Parent',haxis_i_watermark);
+        imshow(watermarkedI,'Parent',haxis_i_filter);
+        title('Watermarked Image (No Signal Processing)','Parent',haxis_i_filter);
     end
 
 %Callbacks for tab 2, audio
