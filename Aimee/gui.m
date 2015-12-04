@@ -102,8 +102,13 @@ close all;
             title('Filtered Watermarked Image','Parent',haxis_i_filter);
             drawnow
          case 'Crop'
-           watermarkedI = imcrop(watermarkedI);
-           imshow(watermarkedI,'Parent',haxis_i_filter);
+           [croppedImage, rect] = imcrop(watermarkedI);
+           %rect: [xmin ymin width height]
+           temp = original_image;
+           size(temp)
+           temp(rect(2):rect(2)+rect(4),rect(1):rect(1)+rect(3),:) = im2uint8(croppedImage);
+           imshow(croppedImage,'Parent',haxis_i_filter);
+           watermarkedI = temp;
            title('Cropped Watermarked Image','Parent',haxis_i_filter);
            drawnow
          case 'Compress'
