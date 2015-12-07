@@ -4,8 +4,8 @@ function [ watermarkedA, watermark ] = applyAudioWatermark( A, Fs, watermarkLeng
 nfft = length(A);
 df = linspace(0,Fs,nfft);
 A_fft = fftshift(fft(A,nfft));
-figure(1);
-plot(df,abs(A_fft))
+%figure(1);
+%plot(df,abs(A_fft))
 %Generate watermark: output is an array where column 1: spectral components
 %from high to low, column 2: corresponding array index, column 3: random
 %gaussian value
@@ -14,11 +14,14 @@ watermark = generateAudioWatermark(A_fft,watermarkLength);
 %Apply watermark
 A_fft_new = A_fft;
 for val = watermark'
-    A_fft_new(val(2)) = A_fft(val(2)).*exp(watermarkScale*val(3));
+   % A_fft_new(val(2)) = A_fft(val(2)).*exp(watermarkScale*val(3));
+   %Since vi may equal 0, vi'=vi+a*xi is appropriate
+   A_fft_new(val(2)) = A_fft(val(2))+watermarkScale.*val(3);
+   %A_fft_new(val(2)) = A_fft(val(2))*(1+watermarkScale*val(3));
 end
-figure(2);
-plot(df,abs(A_fft_new));
+%figure(2);
+%plot(df,abs(A_fft_new));
 %Reconstruct Audio
-watermarkedA = ifft(ifftshift(A_fft));
+watermarkedA = ifft(ifftshift(A_fft_new));
 end
 

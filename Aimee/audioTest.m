@@ -7,6 +7,7 @@ clc;
 dt = 1/Fs;
 T = dt*(length(A)-1);
 t = 0:dt:T;
+nfft = length(A);
 %{
 %Plot the amplitude of the audio vs time
 figure(1);
@@ -15,7 +16,7 @@ title('Time Domain Audio Plot')
 xlabel('Time (s)');
 ylabel('Amplitude');
 %}
-sound(A,Fs)
+%sound(A,Fs)
 %{
 %Plot the frequency content of the audio
 nfft = 1024;%set fft length
@@ -35,3 +36,26 @@ watermarkScale = 0.05;
 %figure(2);
 %plot(t,watermarkedA)
 sound(real(double(watermarkedA)), Fs);
+
+%Extract watermark
+%extWatermark = extractAudioWatermark(A,watermarkedA,watermark);
+Diff = (real(ifftshift(fft(watermarkedA)))-real(ifftshift(fft(A))))/watermarkScale;
+extWatermark = zeros(length(watermark),1);
+for i = 1:length(watermark)
+    x = watermark(i,2);
+    extWatermark(i) = Diff(watermark(i,2));
+end
+
+fitnessChecks = 1000;
+fitnessPlot = zeros(fitnessChecks,1);
+randWatermark = watermark(:,3);
+for i=1:fitnessChecks
+    if i == 100
+        randWatermark = watermark(:,3);
+    else
+        randWatermark = randn(length(watermark),1);
+    end
+    fitnessPlot(i) = extWatermark'*randWatermark/sqrt(extWatermark'*extWatermark);
+end
+figure(4);
+plot(fitnessPlot);

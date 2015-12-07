@@ -1,6 +1,4 @@
 function [ watermark ] = generateAudioWatermark( A_fft, length1 )
-%Want most energy of watermark to lie in low frequencies
-
 %Create array that contains absolute value of A_fft with corresponding
 %index
 temp = zeros(length(A_fft),2);
@@ -10,7 +8,7 @@ for i = 1:length(A_fft)
         temp(i,:) = [value,i];
     end
 end
-points = sortrows(temp,-1);
+points = sortrows(temp,-1);%Descending sort
 points = points(1:length1,:);
 
 watermark = [points randn(length1,1)];
