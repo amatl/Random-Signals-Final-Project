@@ -187,27 +187,29 @@ close all;
          % Set current data to the selected data set.
          switch str{val};
          case 'Filter'
-             beginFreq = 500/Fs;
-             [b,a] = butter(1, beginFreq, 'high');
+             %[beginFreq, endFreq]
+             beginFreq = 2e3/Fs;
+             endFreq = 8e3/Fs;
+             [b,a] = butter(1, [beginFreq, endFreq], 'bandpass');
              watermarkedA = filter(b,a,watermarkedA);
-             A_fft = fftshift(fft(watermarkedA,length(watermarkedA)));
-             plot(df./10^3,abs(A_fft),'Parent',haxis_a_filter);
-             sound(real(double(watermarkedA)), Fs);
+             
          case 'Crop'
-           croppedSignal = watermarkedA(1:floor(length(watermarkedA)*1/4));
-           temp = original_A;
-           temp(1:floor(length(watermarkedA)*1/4)) = croppedSignal;
-           A_fft = fftshift(fft(croppedSignal,length(croppedSignal)));
-           plot(linspace(0,Fs,length(croppedSignal))./10^3,abs(A_fft),'Parent',haxis_a_filter);
-           watermarkedA = temp;
+           croppedSignal = original_A(1:floor(length(original_A)*3/3);
+           %rect: [xmin ymin width height]
+           temp = original_image;
+           size(temp)
+           temp(rect(2):rect(2)+rect(4),rect(1):rect(1)+rect(3),:) = im2uint8(croppedImage);
+           imshow(croppedImage,'Parent',haxis_i_filter);
+           watermarkedI = temp;
            title('Cropped Watermarked Image','Parent',haxis_i_filter);
            drawnow
-           sound(real(double(croppedSignal)), Fs);
          case 'Compress'
          end
-            title('Frequency Domain Plot of Watermarked Audio','Parent',haxis_a_filter);
-            xlabel('Frequency (kHz)','Parent',haxis_a_filter);
-            ylabel('Amplitude','Parent',haxis_a_filter);
+        A_fft = fftshift(fft(watermarkedA,length(watermarkedA)));
+        plot(df./10^3,abs(A_fft),'Parent',haxis_a_filter);
+        title('Frequency Domain Plot of Watermarked Audio','Parent',haxis_a_filter);
+        xlabel('Frequency (kHz)','Parent',haxis_a_filter);
+        ylabel('Amplitude','Parent',haxis_a_filter);
       end
  
    function loadaudiobutton_Callback(source,eventdata)
