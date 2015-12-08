@@ -2,15 +2,22 @@
 I = imread('../RawImages/Lenna.png');
 % Display original
 figure(1);
-image(I);
-% Find most highest points in DCT
+imagesc(I);
+% Find highest points in DCT
 watermarkLength = 1000;
 watermarkScale=0.05;
 [watermarkedI, watermark]= genApplyWatermark(I,watermarkLength,watermarkScale);
 % Display diff of y
-testMode = 5;
+% Different test modes
+% 1: adding noise
+% 2: swaps corners (breaks, but expected)
+% 3: cropped image to small fraction
+%     (and reconstructed with unwatermarked image)
+% 4: Jpeg compression test
+% 5: Scaling down and back up
+testMode = 1;
 if testMode == 1
-    watermarkedI = min(max(watermarkedI+0.10*randn(size(I)),0),1);
+    watermarkedI = min(max(watermarkedI+0.25*randn(size(I)),0),1);
 elseif testMode == 2
     % Swap corners of image, distroys watermark if not fixed
     watermarkedI(:,:,1) = fftshift(watermarkedI(:,:,1));
@@ -19,14 +26,14 @@ elseif testMode == 2
 elseif testMode == 3
     for i = 1:size(I,1)
         for j = 1:size(I,2)
-            if i<400 && i>300 && j<400 && j>300
+            if i<400 && i>370 && j<400 && j>300
             else
                 watermarkedI(i,j,:) = double(I(i,j,:))/255;
             end
         end
     end
 elseif testMode == 4
-    imwrite(watermarkedI,'tmp.jpg','Quality',7);
+    imwrite(watermarkedI,'tmp.jpg','Quality',4);
     watermarkedI = imread('tmp.jpg');
 elseif testMode == 5
     scalefac = 4.1;
@@ -58,3 +65,6 @@ for i=1:fitnessChecks
 end
 figure(4);
 plot(fitnessPlot);
+figure(5);
+imagesc(log10(abs(dct2(getYComponent(watermarkedI))))*20);
+colorbar;
