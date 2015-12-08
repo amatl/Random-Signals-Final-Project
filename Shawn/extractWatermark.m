@@ -1,6 +1,7 @@
 function [extWatermark] = extractWatermark(Iorig,Icandidate,watermark)
 Jorig = dct2(getYComponent(Iorig));
 Jcandidate = dct2(getYComponent(Icandidate));
+
 Jdiff = real(log(Jcandidate))-real(log(Jorig));
 watermarkLength = size(watermark,1);
 extWatermark = zeros(watermarkLength,1);

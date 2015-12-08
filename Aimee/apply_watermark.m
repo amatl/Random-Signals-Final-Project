@@ -37,7 +37,7 @@ title('Filtered Watermarked Image');
 image_new_filtered_f = dct2(image_new_filtered(:,:,1));
 watermark = (image_new_filtered_f-image_f)./a;
 x_watermark = max(watermark);
-similarity = x_watermark.*x./sqrt(x_watermark.*x);
+similarity = x_watermark*x'/sqrt(x_watermark*x_watermark')
 %or we can use the correlation coefficient
 corrcoef(x_watermark,x)
 
