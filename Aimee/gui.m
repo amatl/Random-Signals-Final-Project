@@ -127,6 +127,7 @@ close all;
            drawnow
          case 'Compress'
            watermarkedI = imresize(watermarkedI,0.5);
+           watermarkedI = imresize(watermarkedI,2);
            imshow(watermarkedI,'Parent',haxis_i_filter);
            title('Compressed Watermarked Image','Parent',haxis_i_filter);
            drawnow
@@ -146,7 +147,6 @@ close all;
        [watermarkedI, watermark]= genApplyWatermark(original_image,watermarkLength,watermarkScale);
         imshow(watermarkedI,'Parent',haxis_i_watermark);
         title('Watermarked Image','Parent',haxis_i_watermark);
-        sound(real(double(watermarkedA)), Fs);
         drawnow
         set(source,'Enable','off');
    end
@@ -204,6 +204,14 @@ close all;
            drawnow
            sound(real(double(croppedSignal)), Fs);
          case 'Compress'
+             s = length(watermarkedA);
+           watermarkedA = resample(watermarkedA,s/2,s);
+           watermarkedA = resample(watermarkedA,2*s,s);
+           A_fft = fftshift(fft(watermarkedA,length(watermarkedA)));
+           sound(real(double(watermarkedA)), Fs);
+           plot(df./10^3,abs(A_fft),'Parent',haxis_a_filter);
+           title('Compressed Watermarked Audio Spectrum','Parent',haxis_a_filter);
+           drawnow
          end
             title('Frequency Domain Plot of Watermarked Audio','Parent',haxis_a_filter);
             xlabel('Frequency (kHz)','Parent',haxis_a_filter);
