@@ -3,6 +3,7 @@ I = imread('../RawImages/Lenna.png');
 % Display original
 figure(1);
 imagesc(I);
+title('Original Image');
 % Find highest points in DCT
 watermarkLength = 1000;
 watermarkScale=0.05;
@@ -17,7 +18,7 @@ watermarkScale=0.05;
 % 5: Scaling down and back up
 testMode = 1;
 if testMode == 1
-    watermarkedI = min(max(watermarkedI+0.25*randn(size(I)),0),1);
+    watermarkedI = min(max(watermarkedI+0.0*randn(size(I)),0),1);
 elseif testMode == 2
     % Swap corners of image, distroys watermark if not fixed
     watermarkedI(:,:,1) = fftshift(watermarkedI(:,:,1));
@@ -45,10 +46,12 @@ end
 % Display diff of y
 figure(2);
 imagesc(getYComponent(watermarkedI) - getYComponent(I));
+title('Difference between grayscale watermarked and original images');
 colorbar;
 % Display modified
 figure(3);
 imagesc(watermarkedI);
+title('Watermarked Image');
 
 % Check watermark against a variety of generated ones
 extWatermark = extractWatermark(I,watermarkedI,watermark);
@@ -68,3 +71,6 @@ plot(fitnessPlot);
 figure(5);
 imagesc(log10(abs(dct2(getYComponent(watermarkedI))))*20);
 colorbar;
+figure(6);
+x = 1:length(extWatermark);
+plot(x,extWatermark,x,watermark(:,3)*watermarkScale)
