@@ -9,14 +9,18 @@ yData = yiq(:,:,1);
 % Calculate DCT
 J = dct2(yData);
 % Manipulate value for demonstration
-J(20,10) = J(20,10)*200;
+vertChange = 5;
+horChange = 5;
+J(vertChange,horChange) = J(vertChange,horChange)+50;
 % Display DCT
 figure(2);
 imagesc(log(abs(J)));
 colorbar;
 % Reconstruct
 yiq2 = yiq;
+yiq = zeros(size(yiq));
 yiq(:,:,1)=idct2(J);
 % Display modified
 figure(3);
 imagesc(ntsc2rgb(yiq));
+title(['Changed DCT coordinate (' num2str(vertChange) ', ' num2str(horChange) ') [vertical, horizontal]'])
