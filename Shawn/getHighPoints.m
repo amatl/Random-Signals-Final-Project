@@ -2,12 +2,12 @@ function [points] = getHighPoints(vals, num)
 valWidth = size(vals,2);
 valHeight = size(vals,1);
 mostPercept = zeros(valWidth*valHeight-1,3);
-for i = 1:valWidth
-    for j = 1:valHeight
+for i = 1:valHeight
+    for j = 1:valWidth
         if i==1 && j==1
             continue
         end
-        mostPercept(i*valHeight+j,:) = [abs(vals(i,j)),i,j];
+        mostPercept(i*valWidth+j,:) = [abs(vals(i,j)),i,j];
     end
 end
 points = sortrows(mostPercept,-1);
