@@ -45,3 +45,6 @@ Temporary Items
 # Matlab temporary files
 *.m~
 
+# Temporary Jpeg file
+tmp.jpg
+
