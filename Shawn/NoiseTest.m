@@ -20,7 +20,7 @@ xlabel('Noise Amplitude');
 ylabel('Standard Deviations of Confidence');
 title('Effect of noise on watermark integrity');
 figure(2);
-noiseWMI = min(max(watermarkedI+0.01*20*randn(size(I)),0),1);
+noiseWMI = min(max(watermarkedI+0.01*80*randn(size(I)),0),1);
 extWatermark = extractWatermark(I,noiseWMI,watermark);
 displayedConfidence = checkWatermark(extWatermark,watermark)
 imagesc(noiseWMI)

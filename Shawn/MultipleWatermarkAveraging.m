@@ -1,11 +1,11 @@
 I = imread('../RawImages/Lenna.png');
 % Find highest points in DCT
 watermarkLength = 1000;
-watermarkScale=0.05;
+watermarkScale=0.1;
 
 [watermarkedI, watermark]= genApplyWatermark(I,watermarkLength,watermarkScale);
 
-numWatermarkings = 20;
+numWatermarkings = 200;
 watermarks = zeros([size(watermark) numWatermarkings]);
 insWatermarks = [];
 imageSum = zeros(size(I));
